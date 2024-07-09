@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { EqInputComponent } from './components/eq-input/eq-input.component';
 import { CommonModule } from '@angular/common';
-import { Eq_input } from './models/Eq_input';
+import { Eq_input, Sign } from './models/Eq_input';
 import { EqSignInputComponent } from './components/eq_sign_input/eq_sign_input.component';
+import { SimplexLogicService } from './services/simplex-logic.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ import { EqSignInputComponent } from './components/eq_sign_input/eq_sign_input.c
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  simplexService = inject(SimplexLogicService);
   cd = inject(ChangeDetectorRef);
   equations: Map<number, Eq_input[]> = new Map<number, Eq_input[]>();
 
@@ -23,7 +25,7 @@ export class AppComponent {
           coefficient: 0,
           eq_id: 1,
           input_id: 1,
-        },
+        }
       ]);
     } else {
       let prev = this.equations.get(1);
@@ -51,7 +53,7 @@ export class AppComponent {
       return x.input_id == event.input_id;
     });
 
-    eq[index] = event;
+    eq[index] = {...event, sign: eq[index].sign};
 
     this.changeVariablesName();
     let objective = this.equations.get(1);
@@ -68,7 +70,11 @@ export class AppComponent {
     this.equations.forEach((x, index) => {
       if (index == 1) return;
       x.forEach((y, index_2) => {
-        y.variable = variables[index_2];
+        if(index_2 == x.length - 1){
+          y.variable = 'C';
+        }else{
+          y.variable = variables[index_2];
+        }
       });
     });
   }
@@ -83,14 +89,22 @@ export class AppComponent {
     });
     const subject_count = this.equations.size;
     if (!variables || variables?.length == 0) return;
-    let newSubject = variables.map((x, index) => {
+    let newSubject: Eq_input[] = variables.map((x, index) => {
       return {
         variable: x,
         coefficient: 0,
         eq_id: subject_count + 1,
         input_id: subject_count * variables.length + index + 1000,
+        sign: Sign.EQUAL,
       };
     });
+    newSubject.push({
+      variable: 'C',
+      coefficient: 0,
+      eq_id: subject_count + 1,
+      input_id: subject_count + 1 + 2000,
+      sign: Sign.EQUAL,
+    })
     this.equations.set(subject_count + 1, newSubject);
   }
   get valuesArray() {
@@ -98,8 +112,16 @@ export class AppComponent {
   }
   reset() {
     this.equations.clear();
+    this.simplexService.reset();
   }
   calculate(){
-    console.log(this.equations)
+    let newMap = new Map<number, Eq_input[]>(this.equations);
+    this.simplexService.solve(newMap);
   };
+
+  changeSign(event: any, id: number) {
+      this.equations.get(id)?.forEach((x) => {
+        x.sign = event;
+      });
+  }
 }

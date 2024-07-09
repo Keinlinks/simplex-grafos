@@ -2,9 +2,9 @@
     <h1 class="text-4xl font-bold mt-2 mb-8">Simplex en grafos</h1>
   <div class="flex items-center gap-4">
     <p class="font-semibold">Objetivo:</p>
-    <app-eq-input [input_id]="variable.input_id" (valueChange)="changeValueInput($event)" [variable]="variable.variable" [coefficient]="variable.coefficient" *ngFor="let variable of equations.get(1); let i = index"></app-eq-input>
+    <app-eq-input [input_id]="variable.input_id" (valueChange)="changeValueInput($event)" [variable]="variable.variable" [variable_2]="variable.variable_2" [coefficient]="variable.coefficient" *ngFor="let variable of equations.get(1); let i = index"></app-eq-input>
     <div>
-        <button *ngIf="!equations.get(2)" (click)="addVariable()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Agregar</button>
+        <button *ngIf="!equations.get(2)" (click)="addVariable()" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Agregar</button>
     </div>
   </div>
   <div class="flex flex-col gap-4 ">
@@ -12,17 +12,17 @@
     <div class="flex items-center gap-4" *ngFor="let subject of valuesArray; let i = index">
       <ng-container *ngIf="i > 0">
         <app-eq-input [input_id]="variable.input_id" (valueChange)="changeValueInput($event)" [eq_id]="variable.eq_id" [variable]="variable.variable" [coefficient]="variable.coefficient" [disabled]="true" *ngFor="let variable of subject"></app-eq-input>
-        <app-eq-sign-input></app-eq-sign-input>
-        <app-eq-input [coefficient]="0" [variable]="'C'" [disabled]="true"></app-eq-input>
+        <div class="h-8 border-r-2 w-1"></div>
+        <app-eq-sign-input (valueChange)="changeSign($event, subject[0].eq_id)"></app-eq-sign-input>
       </ng-container>
     </div>
-    <button (click)="addSubjectTo()" class="bg-blue-900 mt-5 text-white px-4 py-2 rounded-lg">Agregar</button>
+    <button (click)="addSubjectTo()" class="bg-blue-500 hover:bg-blue-700 mt-5 text-white px-4 py-2 rounded-lg">Agregar</button>
   </div>
 
   <div class="absolute top-2 left-2">
-    <button (click)="reset()" class="bg-blue-900 text-white px-4 py-2 rounded-lg">Resetear</button>
+    <button (click)="reset()" class="bg-yellow-300 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Resetear</button>
   </div>
   <div class="absolute top-2 right-2">
-    <button (click)="calculate()" class="bg-blue-900 text-white px-4 py-2 rounded-lg">Calcular</button>
+    <button (click)="calculate()" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Calcular</button>
   </div>
 </main>

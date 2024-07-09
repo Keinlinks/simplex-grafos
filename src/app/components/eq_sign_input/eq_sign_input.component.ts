@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Sign } from '../../models/Eq_input';
 
 @Component({
   selector: 'app-eq-sign-input',
@@ -11,15 +12,16 @@ import { FormsModule } from '@angular/forms';
   >
     <div class="w-14">
       <select
+      (ngModelChange)="changeValue($event)"
         [(ngModel)]="value"
         value = "0"
         class="w-full outline-none border-none appearance-none"
       >
-        <option value="0">=</option>
-        <option value="1">>=</option>
-        <option value="2"><=</option>
-        <option value="3"><</option>
-        <option value="4">></option>
+        <option value="=">=</option>
+        <option value=">=">>=</option>
+        <option value="<="><=</option>
+        <option value="<"><</option>
+        <option value=">">></option>
       </select>
     </div>
   </div>`,
@@ -27,5 +29,12 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EqSignInputComponent {
-  value = '0';
+  @Input() value:Sign = Sign.EQUAL;
+  @Output() valueChange = new EventEmitter<Sign>();
+
+  constructor() {}
+
+  changeValue(event: any) {
+    this.valueChange.emit(event);
+  }
 }
