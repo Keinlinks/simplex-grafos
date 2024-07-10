@@ -6,15 +6,15 @@ import { Sign } from '../../models/Eq_input';
 @Component({
   selector: 'app-eq-sign-input',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   template: `<div
     class="flex border-red border-2 rounded-lg w-24 px-2 py-2 align-middle justify-center"
   >
     <div class="w-14">
       <select
-      (ngModelChange)="changeValue($event)"
-        [(ngModel)]="value"
-        value = "0"
+        (ngModelChange)="changeValue($event)"
+        [(ngModel)]="sign"
+        value="0"
         class="w-full outline-none border-none appearance-none"
       >
         <option value="=">=</option>
@@ -29,7 +29,7 @@ import { Sign } from '../../models/Eq_input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EqSignInputComponent {
-  @Input() value:Sign = Sign.EQUAL;
+  @Input() sign: Sign | null = Sign.EQUAL;
   @Output() valueChange = new EventEmitter<Sign>();
 
   constructor() {}

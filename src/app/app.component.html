@@ -13,7 +13,7 @@
       <ng-container *ngIf="i > 0">
         <app-eq-input [input_id]="variable.input_id" (valueChange)="changeValueInput($event)" [eq_id]="variable.eq_id" [variable]="variable.variable" [coefficient]="variable.coefficient" [disabled]="true" *ngFor="let variable of subject"></app-eq-input>
         <div class="h-8 border-r-2 w-1"></div>
-        <app-eq-sign-input (valueChange)="changeSign($event, subject[0].eq_id)"></app-eq-sign-input>
+        <app-eq-sign-input [sign]="subject[0].sign || null" (valueChange)="changeSign($event, subject[0].eq_id)"></app-eq-sign-input>
       </ng-container>
     </div>
     <button (click)="addSubjectTo()" class="bg-blue-500 hover:bg-blue-700 mt-5 text-white px-4 py-2 rounded-lg">Agregar</button>
@@ -21,8 +21,19 @@
 
   <div class="absolute top-2 left-2">
     <button (click)="reset()" class="bg-yellow-300 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Resetear</button>
+    <input type="number" class="w-24 bg-transparent text-black hover:outline hover:outline-slate-400 border-2 mx-5 px-4 py-2 rounded-lg" placeholder="Iterations" [(ngModel)]="iterations">
   </div>
   <div class="absolute top-2 right-2">
     <button (click)="calculate()" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Calcular</button>
+  </div>
+  <div class="w-screen h-1 border-b-2">
+
+  </div>
+  <div class="flex flex-col gap-5 ">
+    <ng-container *ngFor="let table of table_data.values(); index as i">
+      <h3 class="text-center">Tabla {{ i + 1 }}</h3>
+      <app-table-data  [data]="table"></app-table-data>
+    </ng-container>
+
   </div>
 </main>

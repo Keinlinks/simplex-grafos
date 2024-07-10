@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+ table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }

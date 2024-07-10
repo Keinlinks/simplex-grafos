@@ -1,0 +1,8 @@
+<table>
+  <tr>
+    <th *ngFor="let x of data[0]">{{ x }}</th>
+  </tr>
+  <tr *ngFor="let x of data.slice(1); index as i">
+    <td [ngStyle]="{'background-color': i % 2 === 0 ? '#f2f2f2' : 'white'}" [ngStyle]="{'font-weight': y== 1 ? '500' : '400'}" *ngFor="let y of x">{{ y | appIntParse }}</td>
+  </tr>
+</table>
