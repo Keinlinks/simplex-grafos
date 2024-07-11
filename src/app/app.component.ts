@@ -22,34 +22,34 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   ngOnInit(): void {
-      // this.addVariable(2);
-      // this.addVariable(4);
-      // this.addVariable(9);
-      // this.addVariable(3);
-      // this.addVariable(1);
-      // this.addVariable(3);
-      // this.addVariable(2);
-
-      // this.addSubjectTo([1,1,1,0,0,0,0,50],Sign.EQUAL);
-      // this.addSubjectTo([-1, 0, 0, 1, 0, 0, 0, 40], Sign.EQUAL);
-      // this.addSubjectTo([0, -1, 0, -1, 1, 0, 0, 0], Sign.EQUAL);
-      // this.addSubjectTo([0, 0, 1, 0, 0, -1, 1, 30], Sign.EQUAL);
-      // this.addSubjectTo([0, 0, 0, 0, 1, 1, -1, 60], Sign.EQUAL);
-
-      // this.addSubjectTo([1, 0, 0, 0, 0, 0, 0, 10], Sign.LESS_EQUAL);
-      // this.addSubjectTo([0, 0, 0, 0, 1, 0, 0, 80], Sign.LESS_EQUAL);
-
+     this.addVariable(2);
      this.addVariable(4);
+     this.addVariable(9);
+     this.addVariable(3);
+     this.addVariable(1);
+     this.addVariable(3);
      this.addVariable(2);
 
-     this.addSubjectTo([5, 15, 50], Sign.GREATER_EQUAL);
-     this.addSubjectTo([20, 5, 40], Sign.GREATER_EQUAL);
-     this.addSubjectTo([15, 2, 60], Sign.LESS_EQUAL);
+     this.addSubjectTo([1,1,1,0,0,0,0,50],Sign.EQUAL);
+     this.addSubjectTo([-1, 0, 0, 1, 0, 0, 0, 40], Sign.EQUAL);
+     this.addSubjectTo([0, -1, 0, -1, 1, 0, 0, 0], Sign.EQUAL);
+     this.addSubjectTo([0, 0, 1, 0, 0, -1, 1, 30], Sign.EQUAL);
+     this.addSubjectTo([0, 0, 0, 0, 1, 1, -1, 60], Sign.EQUAL);
+
+     this.addSubjectTo([1, 0, 0, 0, 0, 0, 0, 10], Sign.LESS_EQUAL);
+     this.addSubjectTo([0, 0, 0, 0, 1, 0, 0, 80], Sign.LESS_EQUAL);
+
+    //  this.addVariable(4);
+    //  this.addVariable(2);
+
+    //  this.addSubjectTo([5, 15, 50], Sign.GREATER_EQUAL);
+    //  this.addSubjectTo([20, 5, 40], Sign.GREATER_EQUAL);
+    //  this.addSubjectTo([15, 2, 60], Sign.LESS_EQUAL);
   }
   simplexService = inject(SimplexLogicService);
   cd = inject(ChangeDetectorRef);
   iterations = 5;
-  table_data: Map<number, any[][]> = new Map<number, any[][]>();
+  table_data: Map<string, any[][]> = new Map<string, any[][]>();
   equations: Map<number, Eq_input[]> = new Map<number, Eq_input[]>();
 
   addVariable(coefficient: number = 0) {
@@ -145,6 +145,9 @@ export class AppComponent implements OnInit {
   get valuesArray() {
     return Array.from(this.equations.values());
   }
+  get table_d(){
+    return Array.from(this.table_data.values());
+  }
   reset() {
     this.equations.clear();
     this.simplexService.reset();
@@ -153,7 +156,7 @@ export class AppComponent implements OnInit {
   calculate() {
     let newMap = new Map<number, Eq_input[]>(this.equations);
     this.table_data =
-      this.simplexService.solve(newMap,this.iterations) || new Map<number, any[][]>();
+      this.simplexService.solve(newMap,this.iterations) || new Map<string, any[][]>();
     console.log(this.table_data);
 
   }

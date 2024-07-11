@@ -30,8 +30,9 @@
 
   </div>
   <div class="flex flex-col gap-5 ">
-    <ng-container *ngFor="let table of table_data.values(); index as i">
-      <h3 class="text-center">Tabla {{ i + 1 }}</h3>
+    <ng-container *ngFor="let table of table_d; index as i;last as last">
+      <h3 *ngIf="!last" class="text-center">{{ (i==0) ? 'Tabla Inicial' : ('Iteracion: ' + (i)) }}</h3>
+      <h3 class="text-center" *ngIf="last">Resultado</h3>
       <app-table-data  [data]="table"></app-table-data>
     </ng-container>
 

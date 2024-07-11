@@ -30,7 +30,7 @@ import { FormsModule } from '@angular/forms';
         #variable_input
         id="variable_input"
         appNoNumbers
-        class="outline-none w-6 text-gray-700 bg-none"
+        class="outline-none w-10 text-gray-700 bg-none"
         type="text"
         placeholder="X"
         [disabled]="disabled"
@@ -40,7 +40,7 @@ import { FormsModule } from '@angular/forms';
         *ngIf="variable_2"
         [value]="values.variable + '_' + values.variable_2"
         appNoNumbers
-        class="outline-none text-xs w-6 text-gray-700 bg-none"
+        class="outline-none text-xs w-10 text-gray-700 bg-none"
         type="text"
         placeholder=""
         [disabled]="true"

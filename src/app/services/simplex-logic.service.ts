@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Eq_input } from '../models/Eq_input';
 import * as math from 'mathjs';
 import * as loadash from "lodash";
+import * as chalk from 'chalk';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,8 +13,8 @@ export class SimplexLogicService {
   holgura: number = 0;
   tableau: any[][] = [[]];
 
-  allTables: Map<number, any[][]> = new Map<number, any[][]>();
-
+  allTables: Map<string, any[][]> = new Map<string, any[][]>();
+  chalkI = new chalk.Chalk();
   timeOut = 25;
 
   constructor() {}
@@ -65,7 +66,14 @@ export class SimplexLogicService {
 
     this.generateTableau();
     let copy = loadash.cloneDeep(this.tableau);
-    this.allTables.set(this.allTables.size, copy);
+    this.allTables.set('tabla inicial', copy);
+    this.tableau[1] = this.gauss()[1];
+
+
+    copy = loadash.cloneDeep(this.tableau);
+
+
+    this.allTables.set('Tabla Gauss', copy);
 
     this.iterationSimplex();
     return this.allTables;
@@ -109,20 +117,18 @@ export class SimplexLogicService {
           else{
             p = s.coefficient
           }
-          console.log(p)
           this.tableau[i + 1].push(
             p
           );
         } else {
+          if(this.tableau[0][index] == 'z'){
+
+          }
           this.tableau[i + 1].push(0);
         }
       });
     });
     this.verifyVariableBasic();
-    let copy = loadash.cloneDeep(this.tableau);
-    this.allTables.set(this.allTables.size, copy);
-
-    this.tableau[1] = this.gauss()[1];
   }
 
   verifyVariableBasic() {
@@ -158,7 +164,6 @@ export class SimplexLogicService {
       //buscar la Variable de Salida
       const index_row = this.testCoefficient(index_column);
       if (index_row == 0) break;
-
       //reemplazar la variable basica
       this.tableau[index_row][0] = this.tableau[0][index_column];
       //multiplicar la fila del pivote por 1/varialbe_pivote
@@ -170,8 +175,7 @@ export class SimplexLogicService {
       this.columnPivotZero(index_column, index_row);
       iteration++;
       let copy = loadash.cloneDeep(this.tableau);
-
-      this.allTables.set(this.allTables.size, copy);
+      this.allTables.set(`Tabla iteracion ${iteration}`, copy);
     }
   }
 
@@ -193,11 +197,11 @@ export class SimplexLogicService {
 
       if (!value_to_multiply.includes('M'))
         value_to_multiply = math.evaluate(`${value_to_multiply}`);
-
       if (Number(value_to_multiply) === 0) return;
       this.tableau[row].forEach((value, index) => {
         if (index === 0 || index === 1) return;
         const pivot_column_value = Number(this.tableau[row_pivot][index]);
+
         let sums = `${this.tableau[row][index]} + (${value_to_multiply} * ${pivot_column_value})`;
 
         let result = this.simplifyExpression(sums);
@@ -224,6 +228,7 @@ export class SimplexLogicService {
         pivot_row = i;
       }
     });
+    console.log(this.chalkI.red(`coeficiente ganador:  ${this.tableau[pivot_row][0]}`));
     return pivot_row;
   }
 
@@ -248,6 +253,9 @@ export class SimplexLogicService {
       index_column = i;
     });
     if (result == -1 || result == 0) return -1;
+    console.log(this.chalkI.green(`tabla:  ${this.allTables.size}`));
+    console.log(this.chalkI.green(`Buscando el más positivo:  ${label_column}`));
+
     return index_column;
   }
 
@@ -286,7 +294,6 @@ export class SimplexLogicService {
       gaussTableau[x].forEach((y, index) => {
         const number = Number(y);
         if (isNaN(number) || number == 0) return;
-        console.log("number:" + number);
         gaussTableau[x][index] = number * M + 'M';
         let eq =
         '(' +
@@ -296,13 +303,11 @@ export class SimplexLogicService {
         '(' +
         gaussTableau[x][index].toString() +
         ')';
-        console.log(eq + '>>> '+this.simplifyExpression(eq));
         gaussTableau[1][index] = this.simplifyExpression(eq);
 
       });
     });
     let copy = loadash.cloneDeep(gaussTableau);
-    this.allTables.set(this.allTables.size, copy);
     return gaussTableau;
   }
   simplifyExpression(expression: string) {
@@ -325,7 +330,7 @@ export class SimplexLogicService {
       this.equations.get(1)?.push({
         variable: 'A' + (i + 1),
         variable_2: 'M',
-        coefficient: 1,
+        coefficient: -1,
         eq_id: 1,
         input_id: i,
       });

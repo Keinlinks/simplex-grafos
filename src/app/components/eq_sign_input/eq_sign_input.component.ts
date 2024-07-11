@@ -20,8 +20,6 @@ import { Sign } from '../../models/Eq_input';
         <option value="=">=</option>
         <option value=">=">>=</option>
         <option value="<="><=</option>
-        <option value="<"><</option>
-        <option value=">">></option>
       </select>
     </div>
   </div>`,
