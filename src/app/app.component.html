@@ -1,6 +1,6 @@
 <main class="h-screen w-screen flex flex-col items-center gap-5">
   <header class="h-12 w-screen "></header>
-    <h1 class="text-4xl font-bold mt-2 mb-8">Simplex en grafos</h1>
+    <h1 class="text-4xl font-bold mt-2 mb-8">Simplex gran M</h1>
   <div class="flex items-center gap-4">
     <p class="font-semibold">Objetivo:</p>
     <app-eq-input [input_id]="variable.input_id" (valueChange)="changeValueInput($event)" [variable]="variable.variable" [variable_2]="variable.variable_2" [coefficient]="variable.coefficient" *ngFor="let variable of equations.get(1); let i = index"></app-eq-input>
