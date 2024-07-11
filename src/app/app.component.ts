@@ -46,6 +46,45 @@ export class AppComponent implements OnInit {
     //  this.addSubjectTo([20, 5, 40], Sign.GREATER_EQUAL);
     //  this.addSubjectTo([15, 2, 60], Sign.LESS_EQUAL);
   }
+  loadExample(example: number) {
+    this.reset();
+    switch (example) {
+      case 1:
+      this.addVariable(4);
+      this.addVariable(2);
+
+      this.addSubjectTo([5, 15, 50], Sign.GREATER_EQUAL);
+      this.addSubjectTo([20, 5, 40], Sign.GREATER_EQUAL);
+      this.addSubjectTo([15, 2, 60], Sign.LESS_EQUAL);
+      break;
+      case 2:
+    this.addVariable(2);
+     this.addVariable(4);
+     this.addVariable(9);
+     this.addVariable(3);
+     this.addVariable(1);
+     this.addVariable(3);
+     this.addVariable(2);
+
+     this.addSubjectTo([1,1,1,0,0,0,0,50],Sign.EQUAL);
+     this.addSubjectTo([-1, 0, 0, 1, 0, 0, 0, 40], Sign.EQUAL);
+     this.addSubjectTo([0, -1, 0, -1, 1, 0, 0, 0], Sign.EQUAL);
+     this.addSubjectTo([0, 0, 1, 0, 0, -1, 1, 30], Sign.EQUAL);
+     this.addSubjectTo([0, 0, 0, 0, 1, 1, -1, 60], Sign.EQUAL);
+
+     this.addSubjectTo([1, 0, 0, 0, 0, 0, 0, 10], Sign.LESS_EQUAL);
+     this.addSubjectTo([0, 0, 0, 0, 1, 0, 0, 80], Sign.LESS_EQUAL);
+     break;
+     case 3:
+    this.addVariable(2);
+     this.addVariable(3);
+
+     this.addSubjectTo([0.5, 0.25, 4], Sign.LESS_EQUAL);
+     this.addSubjectTo([1, 3, 20], Sign.GREATER_EQUAL);
+     this.addSubjectTo([1, 1, 10], Sign.EQUAL);
+     break
+    }
+  }
   simplexService = inject(SimplexLogicService);
   cd = inject(ChangeDetectorRef);
   iterations = 5;

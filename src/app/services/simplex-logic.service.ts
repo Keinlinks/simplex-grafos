@@ -154,8 +154,17 @@ export class SimplexLogicService {
       });
     });
   }
+  scopeObjetive(mValue: number){
+    let scope = { M: mValue };
+
+    this.tableau[1].forEach((x, i) => {
+      if (i == 0 ) return;
+      this.tableau[1][i] = math.evaluate(`${x}`, scope);
+    });
+  }
   iterationSimplex() {
     let iteration = 0;
+    this.scopeObjetive(1000);
     while (iteration < this.timeOut) {
       //buscar el más positivo (pivote)
       const index_column = this.searchMorePositive();
@@ -167,6 +176,7 @@ export class SimplexLogicService {
       //reemplazar la variable basica
       this.tableau[index_row][0] = this.tableau[0][index_column];
       //multiplicar la fila del pivote por 1/varialbe_pivote
+      console.log(this.chalkI.blue("elemento pivote: ",this.tableau[index_row][index_column]));
       this.multiplyRow(
         index_row,
         `(1 / ${this.tableau[index_row][index_column]})`
@@ -182,9 +192,15 @@ export class SimplexLogicService {
   multiplyRow(row: number, value: string) {
     this.tableau[row].forEach((x, i) => {
       if (i === 0 || i === 1) return;
-      this.tableau[row][i] = this.limitDecimalsIfExceeds(math.evaluate(
+      console.log(
+        this.chalkI.blue(
+          'elemento fila: ',
+          `${value} * ${this.tableau[row][i]}`
+        )
+      );
+      this.tableau[row][i] = math.evaluate(
         `${value} * ${this.tableau[row][i]}`
-      ),3);
+      );
     });
   }
 
@@ -228,7 +244,7 @@ export class SimplexLogicService {
         pivot_row = i;
       }
     });
-    console.log(this.chalkI.red(`coeficiente ganador:  ${this.tableau[pivot_row][0]}`));
+    console.log(this.chalkI.red(`cociente ganador:  ${this.tableau[pivot_row][0]}`));
     return pivot_row;
   }
 
@@ -352,4 +368,5 @@ export class SimplexLogicService {
       return value.toString();
     }
   }
+
 }
