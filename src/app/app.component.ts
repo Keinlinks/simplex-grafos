@@ -36,13 +36,6 @@ export class AppComponent implements OnInit {
       this.addSubjectTo([15, 2, 60], Sign.LESS_EQUAL);
       break;
        case 2:
-    //  this.addVariable(2, 'XAB');
-    //   this.addVariable(4,'XAC');
-    //   this.addVariable(9, 'XAD');
-    //   this.addVariable(3, 'XBC');
-    //   this.addVariable(1, 'XCE');
-    //   this.addVariable(3, 'XDE');
-    //   this.addVariable(2, 'XED');
       this.addVariable(2);
       this.addVariable(4);
       this.addVariable(9);
@@ -59,15 +52,6 @@ export class AppComponent implements OnInit {
 
       this.addSubjectTo([1, 0, 0, 0, 0, 0, 0, 10], Sign.LESS_EQUAL);
       this.addSubjectTo([0, 0, 0, 0, 1, 0, 0, 80], Sign.LESS_EQUAL);
-    ////////////
-    // this.addVariable(1);
-    // this.addVariable(1);
-    // this.addVariable(1);
-    // this.addVariable(1);
-    // this.addVariable(1);
-
-    // this.addSubjectTo([16, 19, 17, 21, 16, 16], Sign.GREATER_EQUAL);
-    // this.addSubjectTo([16, 21, 14, 11, 10, 21,], Sign.LESS_EQUAL);
 
      break;
      case 3:
