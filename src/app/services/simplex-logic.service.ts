@@ -3,6 +3,7 @@ import { Eq_input } from '../models/Eq_input';
 import * as math from 'mathjs';
 import * as loadash from "lodash";
 import * as chalk from 'chalk';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -12,6 +13,7 @@ export class SimplexLogicService {
   artificial: number = 0;
   holgura: number = 0;
   tableau: any[][] = [[]];
+  mValue: number = 1000;
 
   allTables: Map<string, any[][]> = new Map<string, any[][]>();
   chalkI = new chalk.Chalk();
@@ -19,7 +21,12 @@ export class SimplexLogicService {
 
   constructor() {}
 
-  solve(equations: Map<number, Eq_input[]>, iterations: number = 25) {
+  solve(
+    equations: Map<number, Eq_input[]>,
+    iterations: number = 25,
+    mValue: number = 1000
+  ) {
+    this.mValue = mValue;
     this.timeOut = iterations;
     this.equations = equations;
     if (!equations.get(1)) return;
@@ -69,9 +76,7 @@ export class SimplexLogicService {
     this.allTables.set('tabla inicial', copy);
     this.tableau[1] = this.gauss()[1];
 
-
     copy = loadash.cloneDeep(this.tableau);
-
 
     this.allTables.set('Tabla Gauss', copy);
 
@@ -111,18 +116,14 @@ export class SimplexLogicService {
         if (s) {
           let p;
 
-          if (s.variable_2 ){
+          if (s.variable_2) {
             p = s.coefficient?.toString() + s.variable_2;
+          } else {
+            p = s.coefficient;
           }
-          else{
-            p = s.coefficient
-          }
-          this.tableau[i + 1].push(
-            p
-          );
+          this.tableau[i + 1].push(p);
         } else {
-          if(this.tableau[0][index] == 'z'){
-
+          if (this.tableau[0][index] == 'z') {
           }
           this.tableau[i + 1].push(0);
         }
@@ -141,8 +142,6 @@ export class SimplexLogicService {
         if (label_column === 'C') return;
         const number = Number(y);
         if (isNaN(number)) return;
-        let label_row = this.tableau[row][0];
-
         if (number == 1) {
           if (variables_basic.includes(label_column)) return;
           if (!label_column.includes('S') && !label_column.includes('A'))
@@ -154,29 +153,34 @@ export class SimplexLogicService {
       });
     });
   }
-  scopeObjetive(mValue: number){
+  scopeObjetive(mValue: number) {
     let scope = { M: mValue };
 
     this.tableau[1].forEach((x, i) => {
-      if (i == 0 ) return;
+      if (i == 0) return;
       this.tableau[1][i] = math.evaluate(`${x}`, scope);
     });
   }
   iterationSimplex() {
     let iteration = 0;
-    this.scopeObjetive(1000);
+    this.scopeObjetive(this.mValue);
     while (iteration < this.timeOut) {
       //buscar el más positivo (pivote)
       const index_column = this.searchMorePositive();
       //verificar si hay mas positivos
       if (index_column == -1) break;
       //buscar la Variable de Salida
-      const index_row = this.testCoefficient(index_column);
+      const index_row = this.testQuotient(index_column);
       if (index_row == 0) break;
       //reemplazar la variable basica
       this.tableau[index_row][0] = this.tableau[0][index_column];
       //multiplicar la fila del pivote por 1/varialbe_pivote
-      console.log(this.chalkI.blue("elemento pivote: ",this.tableau[index_row][index_column]));
+      console.log(
+        this.chalkI.blue(
+          'elemento pivote: ',
+          this.tableau[index_row][index_column]
+        )
+      );
       this.multiplyRow(
         index_row,
         `(1 / ${this.tableau[index_row][index_column]})`
@@ -221,7 +225,8 @@ export class SimplexLogicService {
         let sums = `${this.tableau[row][index]} + (${value_to_multiply} * ${pivot_column_value})`;
 
         let result = this.simplifyExpression(sums);
-        if (!result.includes('M')) result = this.limitDecimalsIfExceeds(math.evaluate(`${result}`),3);
+        if (!result.includes('M'))
+          result = this.limitDecimalsIfExceeds(math.evaluate(`${result}`), 3);
         let out;
         const isNumber = Number(result);
         if (isNaN(isNumber)) out = result;
@@ -231,20 +236,34 @@ export class SimplexLogicService {
     });
   }
 
-  testCoefficient(column: number) {
+  testQuotient(column: number) {
     const index_C = this.tableau[0].length - 1;
     let result = 999999999999999;
     let pivot_row = 0;
     this.tableau.forEach((row, i) => {
-      if (i === 0 || i === 1) return;
+      console.log(
+        this.chalkI.underline(`${this.tableau[i][0]}: ${row[column]}`)
+      );
+      if (i === 0 || i === 1 || row[column] < 0) return;
+      console.log(
+        this.chalkI.dim(`${row[column]} para la fila ${this.tableau[i][0]}`)
+      );
       let operation_verify = `(abs((${row[index_C]}) / (${row[column]})) < (${result}))`;
       let operation = `abs((${row[index_C]}) / (${row[column]}))`;
       if (math.evaluate(operation_verify)) {
         result = Number(math.evaluate(operation));
+        console.log(
+          this.chalkI.magentaBright(
+            `resultado: ${result} para la fila ${this.tableau[i][0]}`
+          )
+        );
         pivot_row = i;
+
       }
     });
-    console.log(this.chalkI.red(`cociente ganador:  ${this.tableau[pivot_row][0]}`));
+    console.log(
+      this.chalkI.red(`cociente ganador (variable de salida):  ${this.tableau[pivot_row][0]}`)
+    );
     return pivot_row;
   }
 
@@ -270,7 +289,9 @@ export class SimplexLogicService {
     });
     if (result == -1 || result == 0) return -1;
     console.log(this.chalkI.green(`tabla:  ${this.allTables.size}`));
-    console.log(this.chalkI.green(`Buscando el más positivo:  ${label_column}`));
+    console.log(
+      this.chalkI.green(`Buscando el más positivo:  ${label_column}`)
+    );
 
     return index_column;
   }
@@ -309,21 +330,22 @@ export class SimplexLogicService {
     rows_gauss.forEach((x) => {
       gaussTableau[x].forEach((y, index) => {
         const number = Number(y);
-        if (isNaN(number) || number == 0) return;
+        if (isNaN(number)) return;
         gaussTableau[x][index] = number * M + 'M';
         let eq =
-        '(' +
-        gaussTableau[1][index].toString() +
-        ')' +
-        '+' +
-        '(' +
-        gaussTableau[x][index].toString() +
-        ')';
+          '(' +
+          gaussTableau[1][index].toString() +
+          ')' +
+          '+' +
+          '(' +
+          gaussTableau[x][index].toString() +
+          ')';
         gaussTableau[1][index] = this.simplifyExpression(eq);
-
+        if(gaussTableau[x][0] == 'A3'){
+          console.log(this.chalkI.yellow(gaussTableau[4][5]));
+        }
       });
     });
-    let copy = loadash.cloneDeep(gaussTableau);
     return gaussTableau;
   }
   simplifyExpression(expression: string) {
@@ -353,7 +375,7 @@ export class SimplexLogicService {
     }
     return this.equations.get(1);
   }
-  limitDecimalsIfExceeds(value:number, maxDecimals:number) {
+  limitDecimalsIfExceeds(value: number, maxDecimals: number) {
     const resultString = math.format(value, {
       notation: 'fixed',
       precision: maxDecimals + 1,
@@ -368,5 +390,4 @@ export class SimplexLogicService {
       return value.toString();
     }
   }
-
 }

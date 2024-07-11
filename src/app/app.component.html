@@ -21,8 +21,14 @@
   </div>
 
   <div class="absolute top-2 left-2">
-    <button (click)="reset()" class="bg-yellow-300 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Resetear</button>
-    <input type="number" class="w-24 bg-transparent text-black hover:outline hover:outline-slate-400 border-2 mx-5 px-4 py-2 rounded-lg" placeholder="Iterations" [(ngModel)]="iterations">
+    <button (click)="reset()" class="bg-yellow-300 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg">Resetear</button>
+      <input type="number" class="w-24 bg-transparent text-black hover:outline hover:outline-slate-400 border-2 mx-5 px-4 py-2 rounded-lg" placeholder="Iterations" [(ngModel)]="iterations">
+      <div class="hover:outline hover:outline-slate-400 border-2 mt-5 h-10 rounded-md w-24">
+        <input type="number"
+        class="w-16 focus:outline-none bg-transparent text-black rounded-lg h-full"
+        placeholder="M" [(ngModel)]="mValue">
+        M
+      </div>
   </div>
   <div class="absolute top-2 right-2">
     <button (click)="calculate()" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Calcular</button>

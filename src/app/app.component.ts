@@ -35,23 +35,40 @@ export class AppComponent implements OnInit {
       this.addSubjectTo([20, 5, 40], Sign.GREATER_EQUAL);
       this.addSubjectTo([15, 2, 60], Sign.LESS_EQUAL);
       break;
-      case 2:
-    this.addVariable(2, 'XAB');
-     this.addVariable(4,'XAC');
-     this.addVariable(9, 'XAD');
-     this.addVariable(3, 'XBC');
-     this.addVariable(1, 'XCE');
-     this.addVariable(3, 'XDE');
-     this.addVariable(2, 'XED');
+       case 2:
+    //  this.addVariable(2, 'XAB');
+    //   this.addVariable(4,'XAC');
+    //   this.addVariable(9, 'XAD');
+    //   this.addVariable(3, 'XBC');
+    //   this.addVariable(1, 'XCE');
+    //   this.addVariable(3, 'XDE');
+    //   this.addVariable(2, 'XED');
+      this.addVariable(2);
+      this.addVariable(4);
+      this.addVariable(9);
+      this.addVariable(3);
+      this.addVariable(1);
+      this.addVariable(3);
+      this.addVariable(2);
 
-     this.addSubjectTo([1,1,1,0,0,0,0,50],Sign.EQUAL);
-     this.addSubjectTo([-1, 0, 0, 1, 0, 0, 0, 40], Sign.EQUAL);
-     this.addSubjectTo([0, -1, 0, -1, 1, 0, 0, 0], Sign.EQUAL);
-     this.addSubjectTo([0, 0, 1, 0, 0, -1, 1, 30], Sign.EQUAL);
-     this.addSubjectTo([0, 0, 0, 0, 1, 1, -1, 60], Sign.EQUAL);
+      this.addSubjectTo([1,1,1,0,0,0,0,50],Sign.EQUAL);
+      this.addSubjectTo([-1, 0, 0, 1, 0, 0, 0, 40], Sign.EQUAL);
+      this.addSubjectTo([0, 1, 0, 1, -1, 0, 0, 0], Sign.EQUAL);
+      this.addSubjectTo([0, 0, 1, 0, 0, -1, 1, 30], Sign.EQUAL);
+      this.addSubjectTo([0, 0, 0, 0, 1, 1, -1, 60], Sign.EQUAL);
 
-     this.addSubjectTo([1, 0, 0, 0, 0, 0, 0, 10], Sign.LESS_EQUAL);
-     this.addSubjectTo([0, 0, 0, 0, 1, 0, 0, 80], Sign.LESS_EQUAL);
+      this.addSubjectTo([1, 0, 0, 0, 0, 0, 0, 10], Sign.LESS_EQUAL);
+      this.addSubjectTo([0, 0, 0, 0, 1, 0, 0, 80], Sign.LESS_EQUAL);
+    ////////////
+    // this.addVariable(1);
+    // this.addVariable(1);
+    // this.addVariable(1);
+    // this.addVariable(1);
+    // this.addVariable(1);
+
+    // this.addSubjectTo([16, 19, 17, 21, 16, 16], Sign.GREATER_EQUAL);
+    // this.addSubjectTo([16, 21, 14, 11, 10, 21,], Sign.LESS_EQUAL);
+
      break;
      case 3:
     this.addVariable(2);
@@ -66,6 +83,7 @@ export class AppComponent implements OnInit {
   simplexService = inject(SimplexLogicService);
   cd = inject(ChangeDetectorRef);
   iterations = 50;
+  mValue = 1000;
   table_data: Map<string, any[][]> = new Map<string, any[][]>();
   equations: Map<number, Eq_input[]> = new Map<number, Eq_input[]>();
 
@@ -173,7 +191,7 @@ export class AppComponent implements OnInit {
   calculate() {
     let newMap = new Map<number, Eq_input[]>(this.equations);
     this.table_data =
-      this.simplexService.solve(newMap,this.iterations) || new Map<string, any[][]>();
+      this.simplexService.solve(newMap,this.iterations,this.mValue) || new Map<string, any[][]>();
     console.log(this.table_data);
 
   }
