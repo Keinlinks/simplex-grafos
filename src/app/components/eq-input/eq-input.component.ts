@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, NoNumbersDirective, FormsModule],
   template: `
     <div
-      class="flex border-red border-2 rounded-lg w-24 px-2 py-2 align-middle justify-center"
+      class="flex border-red border-2 rounded-lg w-28 px-2 py-2 align-middle justify-center"
     >
       <div class="w-14">
         <input

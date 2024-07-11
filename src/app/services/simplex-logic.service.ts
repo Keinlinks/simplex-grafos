@@ -183,9 +183,9 @@ export class SimplexLogicService {
       );
 
       this.columnPivotZero(index_column, index_row);
-      iteration++;
       let copy = loadash.cloneDeep(this.tableau);
       this.allTables.set(`Tabla iteracion ${iteration}`, copy);
+      iteration++;
     }
   }
 
